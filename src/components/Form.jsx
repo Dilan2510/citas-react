@@ -1,13 +1,30 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Error from "../components/Error";
 
-function Form({ patients, SetPatients }) {
+function Form({ patients, SetPatients, patient, SetPatient }) {
   const [name, SetName] = useState("");
   const [namePropietary, SetNamePropietary] = useState("");
   const [email, SetEmail] = useState("");
   const [high, Sethigh] = useState("");
   const [symptoms, SetSymptoms] = useState("");
   const [error, SetError] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(patient).length > 0) {
+      SetName(patient.name);
+      SetNamePropietary(patient.namePropietary),
+        SetEmail(patient.email),
+        Sethigh(patient.high),
+        SetSymptoms(patient.symptoms);
+    }
+  }, [patient]);
+
+  const generateId = () => {
+    const random = Math.random().toString(36).substr(2);
+    const date = Date.now().toString(36);
+    return random + date;
+  };
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +39,20 @@ function Form({ patients, SetPatients }) {
         high: high,
         symptoms: symptoms,
       };
-      SetPatients([...patients, objectPatients]);
+
+      if (patient.id) {
+        //editadon el registro
+        objectPatients.id = patient.id;
+        const updateData = patients.map((dataState) =>
+          dataState.id === patient.id ? objectPatients : dataState
+        );
+        SetPatients(updateData);
+        SetPatient({});
+      } else {
+        (objectPatients.id = generateId()),
+          SetPatients([...patients, objectPatients]);
+      }
+
       /// reiniciar form
       SetName("");
       SetNamePropietary("");
@@ -34,7 +64,7 @@ function Form({ patients, SetPatients }) {
 
   return (
     <div className="md:w-1/2 lg:w-2/5 mx-5">
-      <h2 className="font-black text-3xl text-center">Seguimiento Paceintes</h2>
+      <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
       <p className="text-lg mt-5 text-center mb-5 font-bold">
         Añade pacientes {""}
         <span className="text-indigo-600">Administralos</span>
@@ -44,11 +74,7 @@ function Form({ patients, SetPatients }) {
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
       >
         <div>
-          {error && (
-            <div className="bg-red-600 text-white text-center mb-5 p-2 font-bold uppercase rounded-md">
-              Todos los campos son obligatorios
-            </div>
-          )}
+          {error && <Error>Todos los campos son obligatorios</Error>}
           <label
             htmlFor="name"
             className="block text-gray-700 uppercase font-bold"
@@ -130,7 +156,7 @@ function Form({ patients, SetPatients }) {
         <input
           type="submit"
           className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-          value="Agregar Paciente"
+          value={patient.id ? "EDITAR PACIENTE" : "AGREGAR PACIENTE"}
         />
       </form>
     </div>
