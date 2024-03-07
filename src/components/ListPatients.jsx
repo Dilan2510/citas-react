@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 import Patients from "./Patients";
 
-function ListPatients({ patients, SetPatient }) {
+function ListPatients({ patients, SetPatient, DeletePatients }) {
   return (
     <div className="md:w-1/2 lg:w-3/5 md:h-screen overflow-scroll">
       {patients && patients.length ? (
@@ -20,6 +20,7 @@ function ListPatients({ patients, SetPatient }) {
                 patients={patients}
                 key={patients.id}
                 SetPatient={SetPatient}
+                DeletePatients={DeletePatients}
               />
             ))
           ) : (
