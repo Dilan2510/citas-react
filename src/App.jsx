@@ -1,12 +1,22 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Form from "./components/Form";
 import Header from "./components/Header";
 import ListPatients from "./components/ListPatients";
 
 function App() {
-  const [patients, SetPatients] = useState([]);
+  const INITIAL = JSON.parse(localStorage.getItem("patients") ?? []);
+  const [patients, SetPatients] = useState(INITIAL);
   const [patient, SetPatient] = useState({});
+
+  useEffect(() => {
+    localStorage.setItem("patients", JSON.stringify(patients));
+  }, [patients]);
+
+  const DeletePatients = (id) => {
+    const UpdatePatients = patients.filter((data) => data.id !== id);
+    SetPatients(UpdatePatients);
+  };
 
   return (
     <div className="container mx-auto">
@@ -21,6 +31,7 @@ function App() {
         <ListPatients
           patients={patients}
           SetPatient={SetPatient}
+          DeletePatients={DeletePatients}
         ></ListPatients>
       </div>
     </div>

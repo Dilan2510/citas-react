@@ -1,7 +1,15 @@
 // eslint-disable-next-line react/prop-types
-const Patients = ({ patients, SetPatient }) => {
+const Patients = ({ patients, SetPatient, DeletePatients }) => {
   // eslint-disable-next-line react/prop-types
-  const { name, namePropietary, email, high, symptoms } = patients;
+  const { name, namePropietary, email, high, symptoms, id } = patients;
+
+  const HandleDelete = () => {
+    confirm("Desea Eliminar El Paciente");
+    if (patients) {
+      DeletePatients(id);
+    }
+  };
+
   return (
     <div className="m-3 bg-white shadow-md px-5 py-10 rounded-xl mx-5">
       <p className="font-bold mb-3 text-gray-700 uppercase">
@@ -27,7 +35,10 @@ const Patients = ({ patients, SetPatient }) => {
         >
           Editar
         </button>
-        <button className="p-2 m-2 bg-red-600 text-white  font-bold hover:bg-red-700 uppercase rounded-lg">
+        <button
+          onClick={HandleDelete}
+          className="p-2 m-2 bg-red-600 text-white  font-bold hover:bg-red-700 uppercase rounded-lg"
+        >
           Eliminar
         </button>
       </div>
